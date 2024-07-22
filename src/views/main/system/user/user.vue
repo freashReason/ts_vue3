@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import UserSearch from '@/components/page-search/page-search.vue'
+import UserSearch from './c-cpns/user-search.vue'
 import UserContent from './c-cpns/user-content.vue'
 import UserModal from './c-cpns/user-modal.vue'
 

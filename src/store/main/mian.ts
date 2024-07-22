@@ -11,7 +11,7 @@ const useMainStore = defineStore('main', {
     entireDepartments: {}
   }),
   actions: {
-    async fetchEntiredata() {
+    async fetchEntireData() {
       const roleRes = await getEntireRoles()
       const departmentRes = await getEntireDepartments()
       console.log('roleRes :>> ', roleRes)
