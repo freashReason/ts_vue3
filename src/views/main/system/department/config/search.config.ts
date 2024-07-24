@@ -6,7 +6,7 @@ const searchConfig = {
       prop: 'name',
       label: '部门名称',
       placeholder: '请输入查询的部门名称',
-      initialValue: 'bbb'
+      initialValue: ''
     },
     {
       type: 'input',

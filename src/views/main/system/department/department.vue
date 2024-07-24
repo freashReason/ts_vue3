@@ -1,14 +1,10 @@
 <template>
   <div class="department">
-    <page-search
-      :search-config="searchConfig"
-      @query-click="handleQueryClick"
-      @reset-click="handleResetClick"
-    />
+    <page-search :search-config="searchConfig" @query-click="handleQueryClick" />
     <page-content
       :content-config="contentConfig"
       ref="contentRef"
-      @new-click="handleNewClick"
+      @new-click="haneleNewBtnClick"
       @edit-click="handleEditClick"
     >
       <template #leader="scope">
@@ -18,7 +14,7 @@
         <span class="parent">呵呵呵: {{ scope.row[scope.prop] }}</span>
       </template>
     </page-content>
-    <!-- <page-modal :modal-config="modalConfigRef" ref="modalRef" /> -->
+    <page-modal :modal-config="modalConfig" ref="modalRef" />
   </div>
 </template>
 
@@ -30,11 +26,12 @@ import useMainStore from '@/store/main/mian'
 import PageSearch from '@/components/page-search/page-search.vue'
 // import PageContent from '@/components/page-content'
 import PageContent from '@/components/page-content/page-content.vue'
-// import PageModal from '@/components/page-modal/page-modal.vue'
+import PageModal from '@/components/page-modal/page-modal.vue'
 // import contentConfig from '@/views/main/system/department/config/content.config'
 
 import searchConfig from './config/search.config'
 import contentConfig from './config/content.config'
+import modalConfig from './config/modal.config'
 // import modalConfig from './config/modal.config'
 // import usePageContent from '@/hooks/usePageContent'
 // import usePageModal from '@/hooks/usePageModal'
@@ -54,12 +51,11 @@ import contentConfig from './config/content.config'
 //   return modalConfig
 // })
 
-const contentRef = ref<InstanceType<typeof UserContent>>()
-function handleQueryClick(fromData: any) {
-  console.log('fromData :>> ', fromData)
-  contentRef.value?.fetchUserListData(fromData)
+const contentRef = ref<InstanceType<typeof PageContent>>()
+function handleQueryClick(queryInfo: any) {
+  contentRef.value?.fetchPageListData(queryInfo)
 }
-const modalRef = ref<InstanceType<typeof UserModal>>()
+const modalRef = ref<InstanceType<typeof PageModal>>()
 //对modal组件操作
 function haneleNewBtnClick() {
   modalRef.value?.setModalVisible()
@@ -68,6 +64,10 @@ function haneleNewBtnClick() {
 function handleAddClick() {
   contentRef.value?.fetchUserListData()
 }
+function handleEditClick(itemData: any) {
+  modalRef.value?.setModalVisible(false, itemData)
+}
+
 // setup相同的逻辑的抽取: hooks
 // 点击search, content的操作
 // const { contentRef, handleQueryClick, handleResetClick } = usePageContent()

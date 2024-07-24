@@ -29,15 +29,45 @@ const useSystemStore = defineStore('system', {
     },
     async deleteUserByIdAction(id: number) {
       // 1.删除数据操作
-      const deleteResult = await deleteUserById(id)
-      console.log(deleteResult)
+      ElMessageBox.confirm('确认要删除吗?', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await deleteUserById(id).then((res) => {
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: res.data
+            })
+            this.postUsersListAction({ offset: 0, size: 10 })
+          } else {
+            ElMessage({
+              type: 'warning',
+              message: res.data
+            })
+          }
+        })
+      })
+      // const deleteResult = await deleteUserById(id)
+      // console.log(deleteResult)
 
       // 2.重新请求新的数据
-      this.postUsersListAction({ offset: 0, size: 10 })
     },
     async newUserDataAction(userInfo: any) {
       // 1.创建新的用户
       const newResult = await newUserData(userInfo)
+      if (newResult.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: newResult.data
+        })
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: newResult.data
+        })
+      }
       console.log(newResult)
 
       // 2.重新请求新的数据
@@ -45,9 +75,20 @@ const useSystemStore = defineStore('system', {
     },
     async editUserDataAction(id: number, userInfo: any) {
       // 1.更新用户的数据
+
       const editResult = await editUserData(id, userInfo)
       console.log(editResult)
-
+      if (editResult.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: editResult.data
+        })
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: editResult.data
+        })
+      }
       // 2.重新请求新的数据
       this.postUsersListAction({ offset: 0, size: 10 })
     },
@@ -61,9 +102,27 @@ const useSystemStore = defineStore('system', {
       this.pageTotalCount = totalCount
     },
     async deletePageByIdAction(pageName: string, id: number) {
-      const deleteResult = await deletePageById(pageName, id)
-      console.log(deleteResult)
-      this.postPageListAction(pageName, { offset: 0, size: 10 })
+      // 1.删除数据操作
+      ElMessageBox.confirm('确认要删除吗?', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await deletePageById(pageName, id).then((res) => {
+          if (res.code === 0) {
+            ElMessage({
+              type: 'success',
+              message: res.data
+            })
+            this.postPageListAction(pageName, { offset: 0, size: 10 })
+          } else {
+            ElMessage({
+              type: 'warning',
+              message: res.data
+            })
+          }
+        })
+      })
 
       // 获取完整的数据
       const mainStore = useMainStore()

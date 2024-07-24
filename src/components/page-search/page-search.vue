@@ -62,7 +62,7 @@ interface IProps {
     formItems: any[]
   }
 }
-const emit = defineEmits(['queryClick', 'resetClick'])
+const emit = defineEmits(['queryClick'])
 const props = defineProps<IProps>()
 
 // 获取权限
@@ -82,7 +82,7 @@ function handleResetClick() {
   formRef.value?.resetFields()
 
   // 2.将事件出去, content内部重新发送网络请求
-  emit('resetClick')
+  handleQueryClick()
 }
 
 function handleQueryClick() {

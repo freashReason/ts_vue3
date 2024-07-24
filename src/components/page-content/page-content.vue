@@ -41,8 +41,14 @@
               >
             </el-table-column></template
           >
+          <template v-else-if="item.type === 'custom'">
+            <el-table-column align="center" v-bind="item">
+              <template #default="scope">
+                <slot :name="item.slotName" v-bind="scope" :prop="item.prop" hName="why"></slot>
+              </template> </el-table-column
+          ></template>
 
-          <el-table-column v-else align="center" v-bind="item" />
+          <template v-else> <el-table-column align="center" v-bind="item" /> </template>
         </template>
         <!-- <el-table-column align="center" type="selection" width="50px" />
         <el-table-column align="center" type="index" label="序号" width="60px" />
@@ -103,11 +109,12 @@
 import { storeToRefs } from 'pinia'
 import useSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/format'
+import contentConfig from '@/views/main/system/department/config/content.config'
 
 //配置文件
 interface IProps {
   contentConfig: {
-    pageName?: string
+    pageName: string
     header?: {
       title?: string
       btnTitle?: string
@@ -145,12 +152,12 @@ function fetchPageListData(formData: any = {}) {
 
   // 2.发起网络请求
   const queryInfo = { ...pageInfo, ...formData }
-  systemStore.postPageListAction('department', queryInfo)
+  systemStore.postPageListAction(props.contentConfig.pageName, queryInfo)
 }
 
 // 5.删除/新建/编辑的操作
 function handleDeleteBtnClick(id: number) {
-  systemStore.deletePageByIdAction('department', id)
+  systemStore.deletePageByIdAction(props.contentConfig.pageName, id)
 }
 function handleNewUserClick() {
   emit('newClick')

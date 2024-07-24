@@ -56,7 +56,9 @@ import useMainStore from '@/store/main/mian'
 
 import useSystemStore from '@/store/main/system/system'
 import type { FormInstance } from 'element-plus'
+interface IProps {}
 
+const props = defineProps<IProps>()
 const mainStore = useMainStore()
 const systemStore = useSystemStore()
 const roleData = ref()

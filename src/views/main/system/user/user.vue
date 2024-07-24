@@ -2,7 +2,7 @@
 <template>
   <div class="user">
     <user-search @queryClick="handleQueryClick" />
-    <user-content ref="contentRef" @createClick="haneleNewBtnClick" />
+    <user-content ref="contentRef" @edit-click="handleEditClick" @createClick="haneleNewBtnClick" />
     <user-modal ref="modalRef" @addClick="handleAddClick"></user-modal>
   </div>
 </template>
@@ -25,6 +25,10 @@ function haneleNewBtnClick() {
 //新增按钮点击
 function handleAddClick() {
   contentRef.value?.fetchUserListData()
+}
+function handleEditClick(itemData: any) {
+  console.log(itemData)
+  modalRef.value?.setModalVisible(false, itemData)
 }
 </script>
 

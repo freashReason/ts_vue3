@@ -30,7 +30,7 @@
 
         <el-table-column align="center" label="操作" width="150px">
           <template #default="scope">
-            <el-button size="small" icon="Edit" type="primary" text @click="handleEdit(scope)">
+            <el-button size="small" icon="Edit" type="primary" text @click="handleEdit(scope.row)">
               编辑
             </el-button>
             <el-button
@@ -66,7 +66,7 @@ import { storeToRefs } from 'pinia'
 import useSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/format'
 
-const emit = defineEmits(['createClick'])
+const emit = defineEmits(['createClick', 'editClick'])
 // 1.发起action，请求usersList的数据
 const systemStore = useSystemStore()
 // systemStore.postUsersListAction()
@@ -79,12 +79,13 @@ const createUser = function () {
 }
 //修改用户
 function handleEdit(userinfo: any) {
-  console.log('userinfo :>> ', userinfo)
+  emit('editClick', userinfo)
 }
+
 //删除
 const handleDeleteBtnClick = (id: any) => {
   console.log(' 1111111111111111111 ', id)
-  systemStore.deleteUserAction(id)
+  systemStore.deleteUserByIdAction(id)
 }
 //分页定义
 let pagesize = ref(10)
