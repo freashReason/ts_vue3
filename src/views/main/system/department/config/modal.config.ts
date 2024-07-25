@@ -1,4 +1,6 @@
-const modalConfig = {
+import type { IModalConfig } from '@/components/page-modal/type'
+
+const modalConfig: IModalConfig = {
   pageName: 'department',
   header: {
     newTitle: '新建部门',
@@ -9,7 +11,8 @@ const modalConfig = {
       type: 'input',
       label: '部门名称',
       prop: 'name',
-      placeholder: '请输入部门名称'
+      placeholder: '请输入部门名称',
+      initialValue: 'aaaas'
     },
     {
       type: 'input',

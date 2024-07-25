@@ -14,7 +14,7 @@
         <span class="parent">呵呵呵: {{ scope.row[scope.prop] }}</span>
       </template>
     </page-content>
-    <page-modal :modal-config="modalConfig" ref="modalRef" />
+    <page-modal :modal-config="modalConfigRef" ref="modalRef" />
   </div>
 </template>
 
@@ -28,7 +28,8 @@ import PageSearch from '@/components/page-search/page-search.vue'
 import PageContent from '@/components/page-content/page-content.vue'
 import PageModal from '@/components/page-modal/page-modal.vue'
 // import contentConfig from '@/views/main/system/department/config/content.config'
-
+import usePageContent from '@/hooks/usePageContent'
+import usePageModal from '@/hooks/usePageModal'
 import searchConfig from './config/search.config'
 import contentConfig from './config/content.config'
 import modalConfig from './config/modal.config'
@@ -50,30 +51,27 @@ import modalConfig from './config/modal.config'
 
 //   return modalConfig
 // })
-
-const contentRef = ref<InstanceType<typeof PageContent>>()
-function handleQueryClick(queryInfo: any) {
-  contentRef.value?.fetchPageListData(queryInfo)
-}
-const modalRef = ref<InstanceType<typeof PageModal>>()
-//对modal组件操作
-function haneleNewBtnClick() {
-  modalRef.value?.setModalVisible()
-}
-//新增按钮点击
-function handleAddClick() {
-  contentRef.value?.fetchUserListData()
-}
-function handleEditClick(itemData: any) {
-  modalRef.value?.setModalVisible(false, itemData)
-}
+//对modalConfig进行操作
+const modalConfigRef = computed(() => {
+  const mainStore = useMainStore()
+  const department = mainStore.entireDepartments.list.map((item) => {
+    return { label: item.name, value: item.id }
+  })
+  modalConfig.formItems.forEach((item) => {
+    // console.log('mainStore.entireDepartments :>> ', mainStore.entireDepartments)
+    if (item.prop === 'parentId') {
+      item.options.push(...department)
+    }
+  })
+  return modalConfig
+})
 
 // setup相同的逻辑的抽取: hooks
 // 点击search, content的操作
-// const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
+const { contentRef, handleQueryClick } = usePageContent()
 
 // 点击content, modal的操作
-// const { modalRef, handleNewClick, handleEditClick } = usePageModal()
+const { modalRef, haneleNewBtnClick, handleEditClick } = usePageModal()
 </script>
 
 <style scoped>

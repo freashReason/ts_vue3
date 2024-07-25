@@ -1,45 +1,38 @@
 <template>
   <div class="modal">
-    <el-drawer v-model="dialogVisible" :title="isNewRef ? '新建用户' : '编辑用户'">
+    <el-drawer
+      v-model="dialogVisible"
+      :title="isNewRef ? modalConfig.header.newTitle : modalConfig.header.editTitle"
+    >
       <div class="form">
         <el-form ref="ruleFormRef" :model="form" label-position="right" label-width="70px">
-          <el-form-item label="用户名" prop="name">
-            <el-input v-model="form.name" placeholder="请输入用户名" />
-          </el-form-item>
-          <el-form-item label="真实姓名" prop="realname">
-            <el-input v-model="form.realname" placeholder="请输入真实姓名" />
-          </el-form-item>
-          <el-form-item v-if="isNewRef" label="密码" prop="password">
-            <el-input
-              type="password"
-              v-model="form.password"
-              show-password
-              placeholder="请输入密码"
-            />
-          </el-form-item>
-          <el-form-item label="电话号码" prop="cellphone">
-            <el-input v-model.number="form.cellphone" placeholder="请输入电话" />
-          </el-form-item>
-
-          <el-form-item label="选择角色" prop="roleId">
-            <el-select v-model="form.roleId" placeholder="请输入角色">
-              <el-option
-                v-for="item in roleData"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="选择部门" prop="departmentId">
-            <el-select v-model="form.departmentId" placeholder="请输入部门">
-              <el-option
-                v-for="item in departmentData"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-            /></el-select>
-          </el-form-item>
+          <template v-for="item in modalConfig.formItems" :key="item.prop">
+            <el-form-item :label="item.label" :prop="item.prop">
+              <template v-if="item.type === 'input'">
+                <el-input v-model="form[item.prop]" :placeholder="item.placeholder" />
+              </template>
+              <template v-if="item.type === 'date-picker'">
+                <el-date-picker
+                  v-model="form[item.prop]"
+                  type="daterange"
+                  range-separator="-"
+                  start-placeholder="开始时间"
+                  end-placeholder="结束时间"
+                />
+              </template>
+              <template v-if="item.type === 'select'">
+                <el-select
+                  v-model="form[item.prop]"
+                  :placeholder="item.placeholder"
+                  style="width: 100%"
+                >
+                  <template v-for="option in item.options" :key="option.value">
+                    <el-option :label="option.label" :value="option.value" />
+                  </template>
+                </el-select>
+              </template>
+            </el-form-item>
+          </template>
         </el-form>
       </div>
 
@@ -56,9 +49,23 @@ import useMainStore from '@/store/main/mian'
 
 import useSystemStore from '@/store/main/system/system'
 import type { FormInstance } from 'element-plus'
-interface IProps {}
+import type { IModalProps } from './type'
+// interface IModalProps {
+//   modalConfig: {
+//     pageName: string
+//     header: {
+//       newTitle?: string
+//       editTitle?: string
+//     }
+//     formItems: any[]
+//   }
+// }
 
-const props = defineProps<IProps>()
+const props = defineProps<IModalProps>()
+const initialData: any = {}
+for (const item of props.modalConfig.formItems) {
+  initialData[item.prop] = item.initialValue ?? ''
+}
 const mainStore = useMainStore()
 const systemStore = useSystemStore()
 const roleData = ref()
@@ -72,12 +79,7 @@ const dialogVisible = ref(false)
 const isNewRef = ref(true)
 const editData = ref()
 const form = reactive<any>({
-  name: '',
-  realname: '',
-  password: '',
-  cellphone: '',
-  roleId: '',
-  departmentId: ''
+  ...initialData
 })
 //重置表单
 const ruleFormRef = ref<FormInstance>()
@@ -90,16 +92,17 @@ const handleSummit = (formEl: FormInstance | undefined) => {
   dialogVisible.value = false
   if (!isNewRef.value && editData.value) {
     // 编辑用户的数据
-    systemStore.editUserDataAction(editData.value.id, form)
+    systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, form)
   } else {
     // 创建新的用户
-    systemStore.newUserDataAction(form)
+    systemStore.newPageDataAction(props.modalConfig.pageName, form)
   }
   if (!formEl) return
   formEl.resetFields()
 }
 function setModalVisible(isNew: boolean = true, itemData?: any) {
   isNewRef.value = isNew
+  console.log('itemData :>> ', itemData)
   dialogVisible.value = true
   if (!isNew && itemData) {
     // 编辑数据
@@ -109,6 +112,9 @@ function setModalVisible(isNew: boolean = true, itemData?: any) {
     editData.value = itemData
   } else {
     // 新建数据
+    // for (const item of props.modalConfig.formItems) {
+    //   form[item.prop] = item.initialValue ?? ''
+    // }
     for (const key in form) {
       form[key] = ''
     }

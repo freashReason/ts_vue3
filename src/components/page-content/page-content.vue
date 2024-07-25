@@ -25,7 +25,7 @@
                   icon="Edit"
                   type="primary"
                   text
-                  @click="handleEditBtnClick(scope)"
+                  @click="handleEditBtnClick(scope.row)"
                 >
                   编辑
                 </el-button>
