@@ -49,7 +49,5 @@ declare module 'vue' {
     PageSearch: typeof import('./src/components/page-search/page-search.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    UserContent: typeof import('./src/components/page-content/page-content.vue')['default']
-    UserModal: typeof import('./src/components/page-modal/user-modal.vue')['default']
   }
 }

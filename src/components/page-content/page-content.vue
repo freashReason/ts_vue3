@@ -109,7 +109,6 @@
 import { storeToRefs } from 'pinia'
 import useSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/format'
-import contentConfig from '@/views/main/system/department/config/content.config'
 
 //配置文件
 interface IProps {
