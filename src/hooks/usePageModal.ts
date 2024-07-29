@@ -1,4 +1,4 @@
-function usePageModal() {
+function usePageModal(editCallback?: any) {
   const modalRef = ref<InstanceType<typeof PageModal>>()
   //对modal组件操作
   function haneleNewBtnClick() {
@@ -7,6 +7,7 @@ function usePageModal() {
 
   function handleEditClick(itemData: any) {
     modalRef.value?.setModalVisible(false, itemData)
+    if (editCallback) editCallback(itemData)
   }
   return { modalRef, haneleNewBtnClick, handleEditClick }
 }

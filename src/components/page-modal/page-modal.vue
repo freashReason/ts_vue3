@@ -11,6 +11,9 @@
               <template v-if="item.type === 'input'">
                 <el-input v-model="form[item.prop]" :placeholder="item.placeholder" />
               </template>
+              <template v-if="item.type === 'custom'">
+                <slot :name="item.slotName" :form="form"></slot>
+              </template>
               <template v-if="item.type === 'date-picker'">
                 <el-date-picker
                   v-model="form[item.prop]"
@@ -90,12 +93,16 @@ const resetForm = (formEl: FormInstance | undefined) => {
 //提交表单
 const handleSummit = (formEl: FormInstance | undefined) => {
   dialogVisible.value = false
+  let infoData = form
+  if (props.otherInfo) {
+    infoData = { ...infoData, ...props.otherInfo }
+  }
   if (!isNewRef.value && editData.value) {
     // 编辑用户的数据
-    systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, form)
+    systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, infoData)
   } else {
     // 创建新的用户
-    systemStore.newPageDataAction(props.modalConfig.pageName, form)
+    systemStore.newPageDataAction(props.modalConfig.pageName, infoData)
   }
   if (!formEl) return
   formEl.resetFields()

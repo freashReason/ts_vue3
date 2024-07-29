@@ -15,7 +15,19 @@
         <span class="parent">呵呵呵: {{ scope.row[scope.prop] }}</span>
       </template>
     </page-content>
-    <page-modal :modal-config="modalConfigRef" ref="modalRef" />
+    <page-modal :modal-config="modalConfigRef" :other-info="otherInfo" ref="modalRef">
+      <template #chidrenSelect
+        ><el-tree
+          ref="treeRef"
+          style="max-width: 600px"
+          @check="handleCheck"
+          :data="menus"
+          node-key="id"
+          highlight-current
+          :props="{ label: 'name', children: 'children' }"
+          show-checkbox
+      /></template>
+    </page-modal>
   </div>
 </template>
 
@@ -53,9 +65,13 @@ import modalConfig from './config/modal.config'
 //   return modalConfig
 // })
 //对modalConfig进行操作
-console.log('PageContent :>> ', PageContent)
+import { ElTree } from 'element-plus'
+const mainStore = useMainStore()
+const menus = mainStore.entireMenus.list
+const treeRef = ref<InstanceType<typeof ElTree>>()
 const modalConfigRef = computed(() => {
   const mainStore = useMainStore()
+
   const department = mainStore.entireDepartments.list.map((item: any) => {
     return { label: item.name, value: item.id }
   })
@@ -67,13 +83,25 @@ const modalConfigRef = computed(() => {
   })
   return modalConfig
 })
+const otherInfo = ref({})
 
+const handleCheck = (data1: any, data2: any) => {
+  const menuList = [...data2.checkedKeys, ...data2.halfCheckedKeys]
+  console.log('menuList :>> ', menuList)
+  otherInfo.value = { menuList }
+}
 // setup相同的逻辑的抽取: hooks
 // 点击search, content的操作
 const { contentRef, handleQueryClick } = usePageContent()
 
 // 点击content, modal的操作
-const { modalRef, haneleNewBtnClick, handleEditClick } = usePageModal()
+const { modalRef, haneleNewBtnClick, handleEditClick } = usePageModal(editCallback)
+function editCallback(itemData: any) {
+  console.log('itemData :>> ', itemData.menuList)
+  nextTick(() => {
+    treeRef.value?.setCheckedKeys([1, 2, 3, 4])
+  })
+}
 </script>
 
 <style scoped>

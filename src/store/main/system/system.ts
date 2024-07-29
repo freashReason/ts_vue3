@@ -131,6 +131,17 @@ const useSystemStore = defineStore('system', {
     async newPageDataAction(pageName: string, pageInfo: any) {
       const newResult = await newPageData(pageName, pageInfo)
       console.log(newResult)
+      if (newResult.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: newResult.data
+        })
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: newResult.data
+        })
+      }
       this.postPageListAction(pageName, { offset: 0, size: 10 })
 
       // 获取完整的数据
@@ -140,6 +151,17 @@ const useSystemStore = defineStore('system', {
     async editPageDataAction(pageName: string, id: number, pageInfo: any) {
       const editResult = await editPageData(pageName, id, pageInfo)
       console.log(editResult)
+      if (editResult.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: editResult.data
+        })
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: editResult.data
+        })
+      }
       this.postPageListAction(pageName, { offset: 0, size: 10 })
 
       // 获取完整的数据

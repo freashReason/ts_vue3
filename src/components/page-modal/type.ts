@@ -7,6 +7,7 @@ export interface IModalProps {
     }
     formItems: any[]
   }
+  otherInfo?: any
 }
 export interface IModalConfig {
   pageName: string
