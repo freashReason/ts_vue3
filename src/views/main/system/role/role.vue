@@ -66,6 +66,7 @@ import modalConfig from './config/modal.config'
 // })
 //对modalConfig进行操作
 import { ElTree } from 'element-plus'
+import { mapMenusToIds } from '@/utils/map-menus'
 const mainStore = useMainStore()
 const menus = mainStore.entireMenus.list
 const treeRef = ref<InstanceType<typeof ElTree>>()
@@ -99,7 +100,7 @@ const { modalRef, haneleNewBtnClick, handleEditClick } = usePageModal(editCallba
 function editCallback(itemData: any) {
   console.log('itemData :>> ', itemData.menuList)
   nextTick(() => {
-    treeRef.value?.setCheckedKeys([1, 2, 3, 4])
+    treeRef.value?.setCheckedKeys(mapMenusToIds(itemData.menuList), true)
   })
 }
 </script>

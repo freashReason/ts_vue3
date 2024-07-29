@@ -129,3 +129,26 @@ export function mapMenusToPermissions(menuList: any[]) {
 
   return permissions
 }
+/**
+ * 从菜单映射id
+ * @param menuList 菜单的列表
+ * @returns id的数组
+ */
+export function mapMenusToIds(menuList: any[]) {
+  const ids: any[] = []
+
+  function recurse(currentObj: any) {
+    for (const item of currentObj) {
+      // eslint-disable-next-line no-prototype-builtins
+
+      if (item.children) {
+        recurse(item.children)
+      } else {
+        ids.push(item.id)
+      }
+    }
+  }
+
+  recurse(menuList)
+  return ids
+}
