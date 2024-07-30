@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <h3 class="title">{{ contentConfig?.header?.title ?? '数据列表' }}</h3>
-      <el-button type="primary" @click="handleNewUserClick">{{
+      <el-button v-if="isCreate" type="primary" @click="handleNewUserClick">{{
         contentConfig?.header?.btnTitle
       }}</el-button>
     </div>
@@ -18,9 +18,10 @@
           >
 
           <template v-else-if="item.type === 'handler'">
-            <el-table-column align="center" v-bind="item">
+            <el-table-column align="center" v-bind="item" v-if="isDelete && isUpdate">
               <template #default="scope">
                 <el-button
+                  v-if="isUpdate"
                   size="small"
                   icon="Edit"
                   type="primary"
@@ -30,6 +31,7 @@
                   编辑
                 </el-button>
                 <el-button
+                  v-if="isDelete"
                   size="small"
                   icon="Delete"
                   type="danger"
@@ -109,6 +111,7 @@
 import { storeToRefs } from 'pinia'
 import useSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/format'
+import useLoginStore from '@/store/login/login'
 
 //配置文件
 interface IProps {
@@ -125,16 +128,28 @@ interface IProps {
 const props = defineProps<IProps>()
 // 定义事件
 const emit = defineEmits(['newClick', 'editClick'])
+//定义权限
+const loginStore = useLoginStore()
+const { permissions } = loginStore
+const isCreate = permissions.find((item) => item.includes(`${props.contentConfig.pageName}:create`))
+const isDelete = permissions.find((item) => item.includes(`${props.contentConfig.pageName}:delete`))
+const isUpdate = permissions.find((item) => item.includes(`${props.contentConfig.pageName}:update`))
+const isQuery = permissions.find((item) => item.includes(`${props.contentConfig.pageName}:query`))
 
 // 1.发起action，请求usersList的数据
 const systemStore = useSystemStore()
-const currentPage = ref(1)
+
 const pageSize = ref(10)
-fetchPageListData()
 
+// onMounted(() => {
+//   console.log(`the component is now mounted.`)
+//   const { pageList, pageTotalCount, currentPage } = storeToRefs(systemStore)
+
+// })
 // 2.获取usersList数据,进行展示
-const { pageList, pageTotalCount } = storeToRefs(systemStore)
-
+const { pageList, pageTotalCount, currentPage } = storeToRefs(systemStore)
+console.log('currentPage :>> ', currentPage)
+fetchPageListData()
 // 3.页码相关的逻辑
 function handleSizeChange() {
   fetchPageListData()
@@ -146,8 +161,10 @@ function handleCurrentChange() {
 // 4.定义函数, 用于发送网络请求
 function fetchPageListData(formData: any = {}) {
   // 1.获取offset/size
+  if (!isQuery) return
   const size = pageSize.value
   const offset = (currentPage.value - 1) * size
+  // const offset = 0
   const pageInfo = { size, offset }
 
   // 2.发起网络请求

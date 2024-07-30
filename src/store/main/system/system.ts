@@ -18,7 +18,8 @@ const useSystemStore = defineStore('system', {
     usersTotalCount: 0,
 
     pageList: [],
-    pageTotalCount: 0
+    pageTotalCount: 0,
+    currentPage: 1
   }),
   actions: {
     async postUsersListAction(queryInfo: any) {
@@ -41,6 +42,7 @@ const useSystemStore = defineStore('system', {
               message: res.data
             })
             this.postUsersListAction({ offset: 0, size: 10 })
+            this.currentPage = 1
           } else {
             ElMessage({
               type: 'warning',
@@ -72,6 +74,7 @@ const useSystemStore = defineStore('system', {
 
       // 2.重新请求新的数据
       this.postUsersListAction({ offset: 0, size: 10 })
+      this.currentPage = 1
     },
     async editUserDataAction(id: number, userInfo: any) {
       // 1.更新用户的数据
@@ -91,6 +94,7 @@ const useSystemStore = defineStore('system', {
       }
       // 2.重新请求新的数据
       this.postUsersListAction({ offset: 0, size: 10 })
+      this.currentPage = 1
     },
 
     /** 针对页面的数据: 增删改查 */
@@ -115,6 +119,10 @@ const useSystemStore = defineStore('system', {
               message: res.data
             })
             this.postPageListAction(pageName, { offset: 0, size: 10 })
+            this.currentPage = 1
+            // 获取完整的数据
+            const mainStore = useMainStore()
+            mainStore.fetchEntireData()
           } else {
             ElMessage({
               type: 'warning',
@@ -123,10 +131,6 @@ const useSystemStore = defineStore('system', {
           }
         })
       })
-
-      // 获取完整的数据
-      const mainStore = useMainStore()
-      mainStore.fetchEntireData()
     },
     async newPageDataAction(pageName: string, pageInfo: any) {
       const newResult = await newPageData(pageName, pageInfo)
@@ -143,6 +147,7 @@ const useSystemStore = defineStore('system', {
         })
       }
       this.postPageListAction(pageName, { offset: 0, size: 10 })
+      this.currentPage = 1
 
       // 获取完整的数据
       const mainStore = useMainStore()
@@ -163,6 +168,7 @@ const useSystemStore = defineStore('system', {
         })
       }
       this.postPageListAction(pageName, { offset: 0, size: 10 })
+      this.currentPage = 1
 
       // 获取完整的数据
       const mainStore = useMainStore()

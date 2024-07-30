@@ -1,8 +1,10 @@
-function usePageModal(editCallback?: any) {
-  const modalRef = ref<InstanceType<typeof PageModal>>()
+import pageModal from '@/components/page-modal/page-modal.vue'
+function usePageModal(newCallback?: any, editCallback?: any) {
+  const modalRef = ref<InstanceType<typeof pageModal>>()
   //对modal组件操作
   function haneleNewBtnClick() {
     modalRef.value?.setModalVisible()
+    if (newCallback) newCallback()
   }
 
   function handleEditClick(itemData: any) {

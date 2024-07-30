@@ -5,15 +5,17 @@ import { localCache } from '@/utils/cache'
 
 import { LOGIN_TOKEN } from '@/global/constants'
 import router from '@/router'
-import { mapMenusToRoutes } from '@/utils/map-menus'
+import { mapMenusToPermissions, mapMenusToRoutes } from '@/utils/map-menus'
 import useMainStore from '../main/mian'
+import user from '@/router/main/system/user/user'
 
 const useLoginStore = defineStore('login', {
-  state: () => ({
+  state: (): any => ({
     token: '',
     name: '',
     userInfo: {},
-    userMenus: []
+    userMenus: [],
+    permissions: []
   }),
   actions: {
     async loginAccountAction(account: IAccount) {
@@ -37,10 +39,14 @@ const useLoginStore = defineStore('login', {
 
       localCache.setCache('userInfo', userInfo)
       localCache.setCache('userMenus', userMenus)
-
+      //获取登录用户的按钮权限
+      const permissions: string[] = mapMenusToPermissions(userMenus)
+      this.permissions = permissions
+      console.log('permissions :>> ', permissions)
+      // localCache.setCache('permissions', permissions)
       //路由动态加载
+
       const routes = mapMenusToRoutes(userMenus)
-      console.log('routes :>> ', routes)
       // router.addRoute('main', routes)
       routes.forEach((route) => router.addRoute('main', route))
       router.push('/main')
@@ -60,7 +66,8 @@ const useLoginStore = defineStore('login', {
         routes.forEach((route) => router.addRoute('main', route))
       }
     }
-  }
+  },
+  persist: true
 })
 
 export default useLoginStore

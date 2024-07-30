@@ -96,7 +96,12 @@ const handleCheck = (data1: any, data2: any) => {
 const { contentRef, handleQueryClick } = usePageContent()
 
 // 点击content, modal的操作
-const { modalRef, haneleNewBtnClick, handleEditClick } = usePageModal(editCallback)
+const { modalRef, haneleNewBtnClick, handleEditClick } = usePageModal(newCallback, editCallback)
+function newCallback() {
+  nextTick(() => {
+    treeRef.value?.setCheckedKeys(mapMenusToIds([]))
+  })
+}
 function editCallback(itemData: any) {
   console.log('itemData :>> ', itemData.menuList)
   nextTick(() => {

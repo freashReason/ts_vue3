@@ -152,3 +152,11 @@ export function mapMenusToIds(menuList: any[]) {
   recurse(menuList)
   return ids
 }
+// /**
+//  *
+//  * @param menuList 菜单的列表
+//  * @returns 权限的数组
+//  */
+// export function mapMenusToPermissions(menuList: any[]) {
+//   const permission = []
+// }
