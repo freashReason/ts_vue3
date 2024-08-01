@@ -58,7 +58,7 @@ const option = computed<EChartsOption>(() => {
     series: [
       {
         type: 'bar',
-        barWidth: 50,
+        barWidth: '90%',
         showBackground: true,
         // 系列图形的样式(每个item的样式)
         // 可以被放到每一项中,针对每一项设置

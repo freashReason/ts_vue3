@@ -27,9 +27,10 @@
     <!-- 3.底部部分的图表 -->
     <el-row :gutter="10">
       <el-col :span="12" >
-        <chart-card>
-          <line-echart v-bind="showGoodsCategorySale" />
-        </chart-card header="123132">
+        <chart-card header="123132">
+          <line-echart
+           v-bind="showGoodsCategorySale" />
+        </chart-card >
       </el-col>
       <el-col :span="12" >
         <chart-card header="123132">

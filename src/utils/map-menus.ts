@@ -139,8 +139,6 @@ export function mapMenusToIds(menuList: any[]) {
 
   function recurse(currentObj: any) {
     for (const item of currentObj) {
-      // eslint-disable-next-line no-prototype-builtins
-
       if (item.children) {
         recurse(item.children)
       } else {
