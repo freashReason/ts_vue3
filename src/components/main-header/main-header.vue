@@ -23,7 +23,7 @@ const emit = defineEmits(['foldChange'])
 
 // 1.记录状态
 const isFold = ref(false)
-function handleMenuIconClick () {
+function handleMenuIconClick() {
   // 1.内部改变状态
   isFold.value = !isFold.value
 

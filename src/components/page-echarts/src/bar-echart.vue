@@ -20,13 +20,27 @@ const option = computed<EChartsOption>(() => {
     title: {
       text: '支持鼠标滚动缩放'
     },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
     grid: {
-      bottom: '5%'
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
     },
     xAxis: {
       data: props.labels,
+      type: 'category',
+      axisTick: {
+        alignWithLabel: true
+      },
       axisLabel: {
         inside: true,
+        interval: 0,
         color: '#fff'
       },
       z: 10
@@ -44,6 +58,7 @@ const option = computed<EChartsOption>(() => {
     series: [
       {
         type: 'bar',
+        barWidth: 50,
         showBackground: true,
         // 系列图形的样式(每个item的样式)
         // 可以被放到每一项中,针对每一项设置

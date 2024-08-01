@@ -57,8 +57,8 @@ const accountRules: FormRules = {
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 const loginStore = useLoginStore()
-function loginAction (isRemPwd: boolean) {
-  formRef.value?.validate(valid => {
+function loginAction(isRemPwd: boolean) {
+  formRef.value?.validate((valid) => {
     if (valid) {
       //1.储存账号密码
       const name = account.name

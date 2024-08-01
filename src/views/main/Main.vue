@@ -21,7 +21,7 @@ import { ref } from 'vue'
 
 // 处理main-header中折叠的变化
 const isFold = ref(false)
-function handleFoldChange (flag: boolean) {
+function handleFoldChange(flag: boolean) {
   isFold.value = flag
 }
 </script>
